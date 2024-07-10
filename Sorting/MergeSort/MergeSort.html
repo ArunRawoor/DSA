@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merge Sort Visualization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        #bars {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-top: 20px;
+        }
+        .bar {
+            width: 20px;
+            margin: 0 2px;
+            background-color: teal;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            color: white;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Merge Sort Visualization</h1>
+        <button onclick="generateArray()">Generate New Array</button>
+        <button onclick="mergeSortVisual()">Merge Sort</button>
+        <div id="bars"></div>
+    </div>
+    <script>
+        let array = [];
+        let delay = 300;
+
+        function generateArray() {
+            const barsContainer = document.getElementById('bars');
+            barsContainer.innerHTML = '';
+            array = [];
+            for (let i = 0; i < 20; i++) {
+                array.push(Math.floor(Math.random() * 100) + 1);
+            }
+            array.forEach(num => {
+                const bar = document.createElement('div');
+                bar.classList.add('bar');
+                bar.style.height = `${num * 3}px`;
+                bar.innerText = num;
+                barsContainer.appendChild(bar);
+            });
+        }
+
+        async function mergeSortVisual() {
+            await mergeSort(array, 0, array.length - 1);
+        }
+
+        async function mergeSort(arr, left, right) {
+            if (left < right) {
+                const mid = Math.floor((left + right) / 2);
+                await mergeSort(arr, left, mid);
+                await mergeSort(arr, mid + 1, right);
+                await merge(arr, left, mid, right);
+            }
+        }
+
+        async function merge(arr, left, mid, right) {
+            const n1 = mid - left + 1;
+            const n2 = right - mid;
+
+            const L = new Array(n1);
+            const R = new Array(n2);
+
+            for (let i = 0; i < n1; i++)
+                L[i] = arr[left + i];
+            for (let j = 0; j < n2; j++)
+                R[j] = arr[mid + 1 + j];
+
+            let i = 0, j = 0, k = left;
+
+            while (i < n1 && j < n2) {
+                if (L[i] <= R[j]) {
+                    arr[k] = L[i];
+                    i++;
+                } else {
+                    arr[k] = R[j];
+                    j++;
+                }
+                k++;
+                await visualizeArray(arr);
+            }
+
+            while (i < n1) {
+                arr[k] = L[i];
+                i++;
+                k++;
+                await visualizeArray(arr);
+            }
+
+            while (j < n2) {
+                arr[k] = R[j];
+                j++;
+                k++;
+                await visualizeArray(arr);
+            }
+        }
+
+        function visualizeArray(arr) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const barsContainer = document.getElementById('bars');
+                    barsContainer.innerHTML = '';
+                    arr.forEach(num => {
+                        const bar = document.createElement('div');
+                        bar.classList.add('bar');
+                        bar.style.height = `${num * 3}px`;
+                        bar.innerText = num;
+                        barsContainer.appendChild(bar);
+                    });
+                    resolve();
+                }, delay);
+            });
+        }
+
+        // Generate an initial array on page load
+        window.onload = generateArray;
+    </script>
+</body>
+</html>

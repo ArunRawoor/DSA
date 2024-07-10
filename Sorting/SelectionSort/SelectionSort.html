@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selection Sort Visualization</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            text-align: center;
+        }
+        .bars {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+        .bar {
+            margin: 0 2px;
+            background-color: #007bff;
+            width: 20px;
+            display: inline-block;
+            position: relative;
+        }
+        .bar-label {
+            position: absolute;
+            bottom: -20px;
+            width: 100%;
+            text-align: center;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="bars" class="bars"></div>
+        <div class="controls">
+            <button onclick="generateArray()">Generate New Array</button>
+            <button onclick="selectionSort()">Selection Sort</button>
+        </div>
+    </div>
+    <script>
+        function generateArray() {
+            const barsContainer = document.getElementById('bars');
+            barsContainer.innerHTML = '';
+            const array = [];
+            for (let i = 0; i < 20; i++) {
+                array.push(Math.floor(Math.random() * 100) + 1);
+            }
+            array.forEach(num => {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = `${num * 3}px`;
+                bar.innerHTML = `<div class="bar-label">${num}</div>`;
+                barsContainer.appendChild(bar);
+            });
+        }
+
+        async function selectionSort() {
+            const bars = document.querySelectorAll('.bar');
+            const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+            for (let i = 0; i < bars.length - 1; i++) {
+                let minIndex = i;
+                bars[minIndex].style.backgroundColor = 'red';
+                for (let j = i + 1; j < bars.length; j++) {
+                    bars[j].style.backgroundColor = 'yellow';
+                    await delay(50);
+
+                    const value1 = parseInt(bars[j].childNodes[0].innerHTML);
+                    const value2 = parseInt(bars[minIndex].childNodes[0].innerHTML);
+
+                    if (value1 < value2) {
+                        bars[minIndex].style.backgroundColor = '#007bff';
+                        minIndex = j;
+                        bars[minIndex].style.backgroundColor = 'red';
+                    } else {
+                        bars[j].style.backgroundColor = '#007bff';
+                    }
+                }
+
+                if (minIndex !== i) {
+                    let tempHeight = bars[i].style.height;
+                    let tempLabel = bars[i].childNodes[0].innerHTML;
+                    bars[i].style.height = bars[minIndex].style.height;
+                    bars[i].childNodes[0].innerHTML = bars[minIndex].childNodes[0].innerHTML;
+                    bars[minIndex].style.height = tempHeight;
+                    bars[minIndex].childNodes[0].innerHTML = tempLabel;
+                }
+
+                bars[minIndex].style.backgroundColor = '#007bff';
+                bars[i].style.backgroundColor = 'green';
+            }
+
+            bars[bars.length - 1].style.backgroundColor = 'green';
+        }
+
+        generateArray();
+    </script>
+</body>
+</html>

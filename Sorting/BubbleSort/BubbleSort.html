@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble Sort Visualization</title>
+    <style>
+        .bar {
+            display: inline-block;
+            width: 30px;
+            margin: 2px;
+            background-color: teal;
+            color: white;
+            text-align: center;
+            vertical-align: bottom;
+        }
+    </style>
+</head>
+<body>
+    <h2>Bubble Sort Visualization</h2>
+    <div id="array-container"></div>
+    <button onclick="startBubbleSort()">Start Bubble Sort</button>
+    <script>
+        let arr = [64, 34, 25, 12, 22, 11, 90];
+        const container = document.getElementById('array-container');
+
+        function renderArray() {
+            container.innerHTML = '';
+            arr.forEach(value => {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = value + 'px';
+                bar.textContent = value;
+                container.appendChild(bar);
+            });
+        }
+
+        async function startBubbleSort() {
+            let n = arr.length;
+            for (let i = 0; i < n; i++) {
+                for (let j = 0; j < n - 1 - i; j++) {
+                    renderArray();
+                    if (arr[j] > arr[j + 1]) {
+                        let temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                        await new Promise(resolve => setTimeout(resolve, 500)); // Add delay for visualization
+                    }
+                }
+            }
+            renderArray();
+        }
+
+        renderArray();
+    </script>
+</body>
+</html>
