@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Sort Visualization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        #bars {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-top: 20px;
+        }
+        .bar {
+            width: 20px;
+            margin: 0 2px;
+            background-color: teal;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            color: white;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Quick Sort Visualization</h1>
+        <button onclick="generateArray()">Generate New Array</button>
+        <button onclick="quickSortVisual()">Quick Sort</button>
+        <div id="bars"></div>
+    </div>
+    <script>
+        let array = [];
+        let delay = 300;
+
+        function generateArray() {
+            const barsContainer = document.getElementById('bars');
+            barsContainer.innerHTML = '';
+            array = [];
+            for (let i = 0; i < 20; i++) {
+                array.push(Math.floor(Math.random() * 100) + 1);
+            }
+            array.forEach(num => {
+                const bar = document.createElement('div');
+                bar.classList.add('bar');
+                bar.style.height = `${num * 3}px`;
+                bar.innerText = num;
+                barsContainer.appendChild(bar);
+            });
+        }
+
+        async function quickSortVisual() {
+            await quickSort(array, 0, array.length - 1);
+        }
+
+        async function quickSort(arr, low, high) {
+            if (low < high) {
+                let pi = await partition(arr, low, high);
+                await quickSort(arr, low, pi - 1);
+                await quickSort(arr, pi + 1, high);
+            }
+        }
+
+        async function partition(arr, low, high) {
+            let pivot = arr[high];
+            let i = low - 1;
+
+            for (let j = low; j < high; j++) {
+                if (arr[j] < pivot) {
+                    i++;
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                    await visualizeArray(arr);
+                }
+            }
+            [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+            await visualizeArray(arr);
+            return i + 1;
+        }
+
+        function visualizeArray(arr) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const barsContainer = document.getElementById('bars');
+                    barsContainer.innerHTML = '';
+                    arr.forEach(num => {
+                        const bar = document.createElement('div');
+                        bar.classList.add('bar');
+                        bar.style.height = `${num * 3}px`;
+                        bar.innerText = num;
+                        barsContainer.appendChild(bar);
+                    });
+                    resolve();
+                }, delay);
+            });
+        }
+
+        // Generate an initial array on page load
+        window.onload = generateArray;
+    </script>
+</body>
+</html>

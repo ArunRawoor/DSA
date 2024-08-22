@@ -1,8 +1,8 @@
-let arr = [1, 2, 3, 4, 5];
+// let arr = [1, 2, 3, 4, 5];
 
-arr.push(); 
-// Traversal
-arr.forEach(element => console.log(element));
+// arr.push(); 
+// // Traversal
+// arr.forEach(element => console.log(element));
 
 // Insertion
 
@@ -12,3 +12,11 @@ arr.forEach(element => console.log(element));
 
 // // Searching
 // let index = arr.indexOf(3); // 2
+
+
+
+const createHelloWorld = function() {
+    return function() {
+        return "Hello World";
+    }
+};
